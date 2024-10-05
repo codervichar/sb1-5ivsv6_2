@@ -1,13 +1,40 @@
 import React, { useState } from 'react'
-import { User, Mail, Phone, Lock } from 'lucide-react'
+import { User, Mail, Phone, Lock, Globe } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const Signup: React.FC = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [language, setLanguage] = useState('en')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
+
+  const languages = {
+    'ar': 'Arabic',
+    'az': 'Azerbaijan',
+    'zh': 'Chinese Simplified',
+    'zh-TW': 'Chinese Traditional',
+    'da': 'Danish',
+    'de': 'German',
+    'el': 'Greek',
+    'en': 'English',
+    'es': 'Spanish',
+    'fa': 'Persian',
+    'fr': 'French',
+    'he': 'Hebrew',
+    'id': 'Indonesian',
+    'it': 'Italian',
+    'ja': 'Japanese',
+    'nl': 'Dutch',
+    'no': 'Norwegian',
+    'pt_BR': 'Brazilian Portuguese',
+    'ru': 'Russian',
+    'sv': 'Swedish',
+    'th': 'Thai',
+    'tr': 'Turkish',
+    'uk': 'Ukrainian',
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,6 +90,23 @@ const Signup: React.FC = () => {
               className="w-full p-2 pl-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+          </div>
+        </div>
+        <div className="mb-6">
+          <label htmlFor="language" className="block text-gray-700 font-bold mb-2">Transcription Language</label>
+          <div className="flex items-center border rounded-md">
+            <Globe size={20} className="ml-2 text-gray-400" />
+            <select
+              id="language"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="w-full p-2 pl-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              {Object.entries(languages).map(([code, name]) => (
+                <option key={code} value={code}>{name}</option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="mb-6">
