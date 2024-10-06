@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { User, Mail, Phone, Lock, Globe } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const Signup: React.FC = () => {
   const [name, setName] = useState('')
@@ -44,7 +47,23 @@ const Signup: React.FC = () => {
     // Simulate a successful signup and redirect
     console.log('Signup successful, redirecting to welcome page...')
     navigate('/welcome')
+
+    // Redirect to Stripe Checkout
+    const stripe = await stripePromise;
+    const createCheckoutSession = async () => {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ priceId: 'price_xxx' }),
+      });
+    
+    const session = await response.json();
+
+    await stripe!.redirectToCheckout({ sessionId: session.id });
   }
+}
 
   return (
     <div className="container mx-auto px-4 py-8 sm:py-12">
@@ -124,11 +143,11 @@ const Signup: React.FC = () => {
           </div>
         </div>
         <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300">
-          Sign Up
+          Continue to Free Trial
         </button>
       </form>
     </div>
   )
 }
 
-export default Signup
+export default Signup;
